@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // We inflate the layout and associate it with the Activity
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
@@ -88,6 +88,8 @@ public class MainActivity extends ActionBarActivity {
                     R.id.list_item_forecast_textview, // The ID of the textview to populate
                     listWeekForecast);
 
+            // To turn an xml layout into java view objects, we need to inflate the layout
+            // In our Fragment classes we inflate the layout, which includes a LayoutInflater as a parameter:
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             // Get a reference to the ListView, and attach this adapter to it.
