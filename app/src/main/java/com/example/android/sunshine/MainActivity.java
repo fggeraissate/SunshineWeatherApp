@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,6 +89,11 @@ public class MainActivity extends ActionBarActivity {
                     listWeekForecast);
 
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            // Get a reference to the ListView, and attach this adapter to it.
+            ListView listview = (ListView)rootView.findViewById(R.id.listview_forecast);
+            listview.setAdapter(adapterForecast);
+
             return rootView;
         }
     }
