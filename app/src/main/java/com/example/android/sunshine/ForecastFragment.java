@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,10 +29,35 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment {
 
-    ArrayAdapter<String> adapterForecast;
+    ArrayAdapter<String> arrayAdapterForecast;
 
     public ForecastFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Add this line in order for this fragment to handle menu events
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Handle action bar item clicks here. The action bar will automatically handle clicks on
+        // the Home/Up button, so long as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -50,7 +78,7 @@ public class ForecastFragment extends Fragment {
         // Now that we have some dummy forecast data, create an ArrayAdapter.
         // The ArrayAdapter will take data from a source (like our dummy forecast) and
         // use it to populate the ListView it's attached to.
-        adapterForecast = new ArrayAdapter<String>(
+        arrayAdapterForecast = new ArrayAdapter<String>(
                 getActivity(), // the current context (this activity)
                 R.layout.list_item_forecast, // The name of the layout id
                 R.id.list_item_forecast_textview, // The ID of the textview to populate
@@ -62,7 +90,7 @@ public class ForecastFragment extends Fragment {
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listview = (ListView)rootView.findViewById(R.id.listview_forecast);
-        listview.setAdapter(adapterForecast);
+        listview.setAdapter(arrayAdapterForecast);
 
         return rootView;
     }
@@ -83,7 +111,7 @@ public class ForecastFragment extends Fragment {
 
             try {
                 // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaliable at OWM' forecast api page, at http://openweathermap.org/API#forecast
+                // Possible parameters are avaliable at OWM's forecast api page, at http://openweathermap.org/API#forecast
                 URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
 
                 // Create the request to OpenWeatherMap and open the connection
