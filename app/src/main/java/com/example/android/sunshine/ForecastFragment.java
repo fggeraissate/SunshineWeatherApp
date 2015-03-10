@@ -143,6 +143,9 @@ public class ForecastFragment extends Fragment {
                 }
                 stringForecastJSON = stringBuffer.toString();
 
+                // Verified that the data returned is correct
+                Log.v(LOG_TAG, "String Forecast JSON: " + stringForecastJSON);
+
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
                 // If the code didn't successfully get the weather data, there' no point in attemping to parse it
