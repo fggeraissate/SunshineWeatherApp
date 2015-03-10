@@ -1,6 +1,7 @@
 package com.example.android.sunshine;
 
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,9 +57,10 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute();
+            weatherTask.execute("94043");
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -97,12 +99,17 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+
+            // If there' no zip code, there's nothing to look up. Verify size of params.
+            if (params.length == 0) {
+                return null;
+            }
 
             // These two need to be declared outside the try/catch so that they can be closed in the final block.
             HttpURLConnection urlConnection = null;
@@ -111,10 +118,29 @@ public class ForecastFragment extends Fragment {
             // Will contain the raw JSON response as a string
             String stringForecastJSON = null;
 
+            String format = "json";
+            String units = "metric";
+            int numDays = 7;
+
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaliable at OWM's forecast api page, at http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+                final String BASE_URL_FORECAST = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+                final String PARAM_QUERY = "q";
+                final String PARAM_FORMAT = "mode";
+                final String PARAM_UNITS = "units";
+                final String PARAM_DAYS = "cnt";
+
+                Uri builtUri = Uri.parse(BASE_URL_FORECAST).buildUpon()
+                        .appendQueryParameter(PARAM_QUERY, params[0])
+                        .appendQueryParameter(PARAM_FORMAT, format)
+                        .appendQueryParameter(PARAM_UNITS, units)
+                        .appendQueryParameter(PARAM_DAYS, Integer.toString(numDays))
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap and open the connection
                 urlConnection = (HttpURLConnection)url.openConnection();
