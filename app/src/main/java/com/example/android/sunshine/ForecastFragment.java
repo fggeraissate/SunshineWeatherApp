@@ -202,9 +202,9 @@ public class ForecastFragment extends Fragment {
                 arrayResults[i] = stringDay + " - " + stringDescription + " - " + stringHighAndLow;
             }
 
-            for (String string : arrayResults) {
-                Log.v(LOG_TAG, "Forecast entry: " + string);
-            }
+            // for (String string : arrayResults) {
+            //     Log.v(LOG_TAG, "Forecast entry: " + string);
+            // }
 
             return  arrayResults;
         }
@@ -246,7 +246,7 @@ public class ForecastFragment extends Fragment {
 
                 URL url = new URL(builtUri.toString());
 
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                // Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap and open the connection
                 urlConnection = (HttpURLConnection)url.openConnection();
@@ -276,7 +276,7 @@ public class ForecastFragment extends Fragment {
                 stringJsonForecast = stringBuffer.toString();
 
                 // Verified that the data returned is correct
-                Log.v(LOG_TAG, "String Forecast JSON: " + stringJsonForecast);
+                // Log.v(LOG_TAG, "String Forecast JSON: " + stringJsonForecast);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
