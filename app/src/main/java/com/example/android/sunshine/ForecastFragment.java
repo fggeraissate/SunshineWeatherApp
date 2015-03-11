@@ -12,9 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.text.format.Time;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,6 +103,15 @@ public class ForecastFragment extends Fragment {
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listview = (ListView)rootView.findViewById(R.id.listview_forecast);
         listview.setAdapter(arrayAdapterForecast);
+
+        // Adding a toast when the user touches a listview item
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String stringForecast = arrayAdapterForecast.getItem(position);
+                Toast.makeText(getActivity(), stringForecast, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return rootView;
     }
