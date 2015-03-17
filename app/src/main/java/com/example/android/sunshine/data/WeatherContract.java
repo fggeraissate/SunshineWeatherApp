@@ -29,10 +29,6 @@ import android.text.format.Time;
 public class WeatherContract {
 
     // The Contract is also a great place to define the URIs that our app will be using to access its data.
-    /* Content provider is a class that sits between an app and its data source. Its job is to provide easily managed access to underlying data source.
-       Reasons to use content provider: 1) Easily change underlying data source without to change any code in the apps that access the content provider
-                                        2) Classes as SyncAdapters, Loaders and CursorAdapters use content providers. If you need to use these classes you need the data accessible through a content provider
-                                        3) Allow many apps to access, use and modify a single data source securely. */
 
     // The "Content authority" is a name for the entire content provider, similar to the relationship
     // between a domain name and its website. A convenient string to use for the content authority is
@@ -139,10 +135,10 @@ public class WeatherContract {
         }
  
         /*
-            Student: Fill in this buildWeatherLocation function
+            Student: This is the buildWeatherLocation function you filled in.
 +       */
         public static Uri buildWeatherLocation(String locationSetting) {
-            return null;
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
         public static Uri buildWeatherLocationWithStartDate(String locationSetting, long startDate) {

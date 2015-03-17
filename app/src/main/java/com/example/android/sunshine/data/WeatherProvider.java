@@ -24,12 +24,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
+/* Content provider is a class that sits between an app and its data source. Its job is to provide easily managed access to underlying data source.
+   Reasons to use content provider: 1) Easily change underlying data source without to change any code in the apps that access the content provider
+                                    2) Classes as SyncAdapters, Loaders and CursorAdapters use content providers. If you need to use these classes you need the data accessible through a content provider
+                                    3) Allow many apps to access, use and modify a single data source securely. */
 public class WeatherProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private WeatherDbHelper mOpenHelper;
 
+    // Content Providers typically tie each URI type internally to an integer constant.
     static final int WEATHER = 100;
     static final int WEATHER_WITH_LOCATION = 101;
     static final int WEATHER_WITH_LOCATION_AND_DATE = 102;
@@ -37,7 +42,7 @@ public class WeatherProvider extends ContentProvider {
 
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
 
-    static{
+    static {
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
         
         //This is an inner join which looks like
