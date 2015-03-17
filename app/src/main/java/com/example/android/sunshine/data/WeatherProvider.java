@@ -116,20 +116,35 @@ public class WeatherProvider extends ContentProvider {
     /*
         Students: Here is where you need to create the UriMatcher. This UriMatcher will
         match each URI to the WEATHER, WEATHER_WITH_LOCATION, WEATHER_WITH_LOCATION_AND_DATE,
-        and LOCATION integer constants defined above.  You can test this by uncommenting the
+        and LOCATION integer constants defined above. You can test this by uncommenting the
         testUriMatcher test within TestUriMatcher.
      */
     static UriMatcher buildUriMatcher() {
+
+        // I know what you're thinking. Why create a UriMatcher when you can use regular expressions
+        // instead? Because you're not crazy, that's why.
+
         // 1) The code passed into the constructor represents the code to return for the root
         // URI.  It's common to use NO_MATCH as the code for this case. Add the constructor below.
 
+        // All paths added to the UriMatcher have a corresponding code to return when a match is
+        // found. The code passed into the constructor represents the code to return for the root
+        // URI. It' common to use NO_MATCH as the code for this case.
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = WeatherContract.CONTENT_AUTHORITY;
 
-        // 2) Use the addURI function to match each of the types.  Use the constants from
+        // 2) Use the addURI function to match each of the types. Use the constants from
         // WeatherContract to help define the types to the UriMatcher.
 
+        // For each type of URI you want to add, create a corresponding code.
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER, WEATHER);
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*", WEATHER_WITH_LOCATION);
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
+
+        matcher.addURI(authority, WeatherContract.PATH_LOCATION, LOCATION);
 
         // 3) Return the new matcher!
-        return null;
+        return matcher;
     }
 
     /*
