@@ -15,9 +15,11 @@
  */
 package com.example.android.sunshine;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -25,6 +27,7 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.data.WeatherContract.WeatherEntry;
 
 import org.json.JSONArray;
@@ -106,10 +109,48 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
      * @return the row ID of the added location.
      */
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
-        // Students: First, check if the location with this city name exists in the db
+
+        long locationId;
+
+        // First, check if the location with this city name exists in the db
+        Cursor cursorLocation = mContext.getContentResolver().query (
+                WeatherContract.LocationEntry.CONTENT_URI,
+                new String[]{WeatherContract.LocationEntry._ID},
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
+                new String[]{locationSetting},
+                null);
+
         // If it exists, return the current ID
+        if (cursorLocation.moveToFirst()) {
+            int locationIdIndex = cursorLocation.getColumnIndex(WeatherContract.LocationEntry._ID);
+            locationId = cursorLocation.getLong(locationIdIndex);
+
         // Otherwise, insert it using the content resolver and the base URI
-        return -1;
+        } else {
+            // Now the content provider is set up, inserting rows of data is pretty simple.
+            // First create a ContentValues object to hold the data you want to insert.
+            ContentValues contentValuesLocation = new ContentValues();
+
+            // Then add the data, along with the corresponding name of the data type, so the content
+            // provider knows what kind of value is being inserted.
+            contentValuesLocation.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, cityName);
+            contentValuesLocation.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, locationSetting);
+            contentValuesLocation.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, lat);
+            contentValuesLocation.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, lon);
+
+            // Finally, insert location data into the database.
+            Uri uriInserted = mContext.getContentResolver().insert(
+                    WeatherContract.LocationEntry.CONTENT_URI,
+                    contentValuesLocation);
+
+            // The resulting URI contains the ID for the row. Extract the locationId from the Uri.
+            locationId = ContentUris.parseId(uriInserted);
+        }
+
+        cursorLocation.close();
+
+        // Wait, that worked?  Yes!
+        return locationId;
     }
 
     /*
